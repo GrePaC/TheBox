@@ -28,14 +28,11 @@ class LogInADjdbc:
 
             statement.close()
             db_connection.close()
-            try:
 
-                if(len(tupla) == 3):
-                    return tupla[2]
-            except:
-
-                return 0
+            return tupla
+            
         except:
+            
             return 1
         
 
