@@ -8,6 +8,98 @@ import Data as dGeneral
 
 gteam = 0
 
+class Mechanisms():
+    def __init__(self):
+
+        admin = GeneralADjdbc()
+
+        #General settings
+        self.frameMechanisms = Tk()
+        self.frameMechanisms.title("THE BOX: Robot Specs")
+        self.frameMechanisms.geometry("1123x673")
+
+        self.mechanismUpper = StringVar(self.frameMechanisms)
+        self.actuatorUpper = StringVar(self.frameMechanisms)
+        self.mechanismLower = StringVar(self.frameMechanisms)
+        self.actuatorLower = StringVar(self.frameMechanisms)
+        self.mechanismIntake = StringVar(self.frameMechanisms)
+        self.actuatorIntake = StringVar(self.frameMechanisms)
+        self.mechanismClimber = StringVar(self.frameMechanisms)
+        self.actuatorClimber = StringVar(self.frameMechanisms)
+
+
+        self.mechanismUpper.set("Type of mechanism for Upper hub")
+        self.actuatorUpper.set("Type of actuator for Upper hub")
+        self.mechanismLower.set("Type of mechanism for Lower hub")
+        self.actuatorLower.set("Type of actuator for Lower hub")
+        self.mechanismIntake.set("Type of mechanism for Intake")
+        self.actuatorIntake.set("Type of actuator for Intake")
+        self.mechanismClimber.set("Type of mechanism for Climber")
+        self.actuatorClimber.set("Type of actuator for Climber")
+
+        #Define background image
+
+        self.bgImage = PhotoImage(file="Images/generalBg2.png")
+        self.labelBg = Label(self.frameMechanisms,image=self.bgImage)
+        self.labelBg.place(x=0,y=0)
+
+        #Define and create components
+
+        self.dDMechUpper = OptionMenu(self.frameMechanisms,self.mechanismUpper,"Shooter", "Assited shooter", "Catapult", "Other")
+        self.dDActUpper = OptionMenu(self.frameMechanisms,self.actuatorUpper,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechLower = OptionMenu(self.frameMechanisms,self.mechanismLower,"Shooter", "Assited shooter", "Catapult", "Position", "Ramp","Other")
+        self.dDActLower = OptionMenu(self.frameMechanisms,self.actuatorLower,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechIntake = OptionMenu(self.frameMechanisms, self.mechanismIntake,"Floor", "Terminal", "Both")
+        self.dDActIntake = OptionMenu(self.frameMechanisms,self.actuatorIntake,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechClimber = OptionMenu(self.frameMechanisms, self.mechanismClimber, "None", "Double", "Linear actuator", "Pulley", "Scissor", "Position", "Other")
+        self.dDActClimber = OptionMenu(self.frameMechanisms,self.actuatorClimber,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.bBack = Button(self.frameMechanisms, text ="Back", bg="#B9E5EF", command = self.back)
+        self.bSave = Button(self.frameMechanisms, text ="Save", bg="#B9E5EF", command= self.saveMechanisms)
+
+        #Position elements
+
+        self.dDMechUpper.place(x= 270, y=150)
+        self.dDActUpper.place(x= 270, y=220)
+        self.dDMechLower.place(x= 270, y=290)
+        self.dDActLower.place(x=270, y=360)
+        self.dDMechIntake.place(x=570, y=150)
+        self.dDActIntake.place(x=570, y=220)
+        self.dDMechClimber.place(x=570, y= 290 )
+        self.dDActClimber.place(x=570, y=360)
+        self.bBack.place(x=450, y = 500)
+
+        self.bSave.place(x=570, y=500)
+
+        self.frameMechanisms.mainloop()
+    
+    def back(self):
+
+        self.frameMechanisms.destroy()
+        toShow = PitScouting()
+    
+    def getData(self):
+        upperType = self.mechanismUpper.get()
+        actUpper = self.actuatorUpper.get()
+        lowerType = self.mechanismLower.get()
+        actLower = self.actuatorLower.get()
+        intakeType = self.mechanismIntake.get()
+        actIntake = self.actuatorIntake.get()
+        climbType = self.mechanismClimber.get()
+        actClimb = self.actuatorClimber.get()
+
+        dicUpper = {"Shooter": 1, "Assited shooter": 2, "Catapult":3, "Other": 3}
+        dicLower = {"Shooter": 1, "Assited shooter": 2, "Catapult": 3, "Position": 4, "Ramp": 5,"Other": 6}
+        dicIntake = {"Floor": 1, "Terminal": 2, "Both": 3}
+        dicClimber = {"None": 1, "Double": 2, "Linear actuator": 3, "Pulley": 4, "Scissor": 5, "Position": 6, "Other": 7}
+        dicAcuators = {"Pneumatic": 1, "Electric linear actuator": 2, "Motor": 3, "Mixed": 4}
+
+        datos = dGeneral.team + "," + str(dicUpper[upperType]) + "," + str(dicAcuators[actUpper]) + ","
+        return datos
+
+    def saveMechanisms(self):
+        datos = self.getData()
+
+
 class Programming():
     
     admin = GeneralADjdbc()
@@ -16,7 +108,7 @@ class Programming():
 
         #General settings
         self.frameProgram = Tk()
-        self.frameProgram.title("THE BOX: Robot Specs")
+        self.frameProgram.title("THE BOX: Programming")
         self.frameProgram.geometry("1123x673")
 
         self.vision = StringVar(self.frameProgram)
@@ -103,7 +195,7 @@ class Programming():
 
         self.tfUltrasonics= Entry(self.frameProgram, width=40)
 
-        self.tfUltrasonics.insert(0,"Number of NAVX")
+        self.tfUltrasonics.insert(0,"Number of Ultrasonics")
 
         self.tfUltrasonics.bind("<Button-1>", click5)
 
@@ -128,8 +220,6 @@ class Programming():
         self.tfCargosUpper.bind("<Button-1>", click7)
 
         self.tfCargosUpper.bind("<Leave>", leave)
-
-        
 
         self.bBack = Button(self.frameProgram, text ="Back", bg="#B9E5EF", command = self.back)
 
@@ -173,6 +263,7 @@ class Programming():
         toShow = PitScouting()
     
     def getData(self):
+
         pLanguage = self.language.get()
         cVision = self.vision.get()
         camera = self.tfCameras.get()
@@ -185,16 +276,20 @@ class Programming():
         cargoLow = self.tfCargosLower.get()
         cargoUp = self.tfCargosUpper.get()
 
+        dicBool = {"True": 1, "False" : 0}
 
-        dicBool = {"true": 1, "false" : 0}
-
-        datos = dGeneral.team + "," + str(pLanguage) + "," + str(dicBool[cVision]) + "," + camera + "," +navx + "," + gyro + "," + encoder+ "," + ultrasonic + "," + cargoLow + "," + cargoUp + "," + str(dicBool[taxi])+ ","+ str(dicBool[auto])
-
+        datos = dGeneral.team + ",'" + str(pLanguage) + "'," + str(dicBool[cVision]) + "," + str(camera) + "," +str(navx) + "," + str(gyro) + "," + str(encoder)+ "," + str(ultrasonic) + "," + str(cargoLow) + "," + str(cargoUp) + "," + str(dicBool[taxi])+ ","+ str(dicBool[auto])
+        
+        return datos 
     
     def saveProgramming(self):
         datos= self.getData()
-
-        
+        datos = datos.split(",")
+        response = self.admin.saveProgramming(datos)
+        if response:
+            MessageBox.showinfo("Alert", "Data SAVED")
+        else:
+            MessageBox.showinfo("Alert", "ERROR Saving the data")
 
 class RobotSpecs():
     
@@ -498,4 +593,4 @@ class PitScouting():
         self.framePit.destroy()
         toShow = Programming()
 
-test = Programming()
+test = Mechanisms()

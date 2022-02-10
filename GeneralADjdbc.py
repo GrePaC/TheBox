@@ -42,6 +42,19 @@ class GeneralADjdbc:
                 return True
             except:
                 return False
-
+    
+    def saveProgramming(self, data):
+        try:
+            db_connection = mysql.connector.connect(host=dGeneral.HOST,database = dGeneral.DATABASE, user= dGeneral.USER, password = dGeneral.PASSWORD )
+            query= "INSERT INTO Programming VALUES (" + str(data[0]) + "," + str(data[1]) + "," + str(data[2])+ "," + str(data[3]) +"," + str(data[4]) + "," + str(data[5])+ ","+ str(data[6])+ ","+ str(data[7])+ ","+ str(data[8])+ ","+ str(data[9])+ ","+ str(data[10])+ ","+ str(data[11])+")"
+            print(query)
+            statement = db_connection.cursor()
+            statement.execute(query)
+            db_connection.commit()
+            statement.close()
+            db_connection.close()
+            return True
+        except:
+            return False
 
         
