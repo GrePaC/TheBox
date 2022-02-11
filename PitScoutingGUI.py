@@ -8,14 +8,41 @@ import Data as dGeneral
 
 gteam = 0
 
-class Mechanisms():
-    def __init__(self):
+class MatchPreview():
 
-        admin = GeneralADjdbc()
+    admin = GeneralADjdbc()
+
+    def __init__(self):
+        #General settings
+        self.framePreview = Tk()
+        self.framePreview.title("THE BOX: Match Preview")
+        self.framePreview.geometry("1123x673")
+
+        #Define background image
+
+        self.bgImage = PhotoImage(file="Images/generalBg2.png")
+        self.labelBg = Label(self.framePreview,image=self.bgImage)
+        self.labelBg.place(x=0,y=0)
+
+        self.priority = StringVar(self.framePreview)
+        self.defense = StringVar(self.framePreview)
+
+        self.priority.set("Team's priority")
+        self.defense.set("Defense")
+
+        #Define components
+        
+
+class Mechanisms():
+
+    admin = GeneralADjdbc()
+    
+
+    def __init__(self):
 
         #General settings
         self.frameMechanisms = Tk()
-        self.frameMechanisms.title("THE BOX: Robot Specs")
+        self.frameMechanisms.title("THE BOX: Mechanisms")
         self.frameMechanisms.geometry("1123x673")
 
         self.mechanismUpper = StringVar(self.frameMechanisms)
@@ -45,14 +72,14 @@ class Mechanisms():
 
         #Define and create components
 
-        self.dDMechUpper = OptionMenu(self.frameMechanisms,self.mechanismUpper,"Shooter", "Assited shooter", "Catapult", "Other")
-        self.dDActUpper = OptionMenu(self.frameMechanisms,self.actuatorUpper,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
-        self.dDMechLower = OptionMenu(self.frameMechanisms,self.mechanismLower,"Shooter", "Assited shooter", "Catapult", "Position", "Ramp","Other")
-        self.dDActLower = OptionMenu(self.frameMechanisms,self.actuatorLower,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
-        self.dDMechIntake = OptionMenu(self.frameMechanisms, self.mechanismIntake,"Floor", "Terminal", "Both")
-        self.dDActIntake = OptionMenu(self.frameMechanisms,self.actuatorIntake,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
-        self.dDMechClimber = OptionMenu(self.frameMechanisms, self.mechanismClimber, "None", "Double", "Linear actuator", "Pulley", "Scissor", "Position", "Other")
-        self.dDActClimber = OptionMenu(self.frameMechanisms,self.actuatorClimber,"Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechUpper = OptionMenu(self.frameMechanisms,self.mechanismUpper,"None","Shooter", "Assited shooter", "Catapult", "Other")
+        self.dDActUpper = OptionMenu(self.frameMechanisms,self.actuatorUpper,"None","Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechLower = OptionMenu(self.frameMechanisms,self.mechanismLower,"None","Shooter", "Assited shooter", "Catapult", "Position", "Ramp","Other")
+        self.dDActLower = OptionMenu(self.frameMechanisms,self.actuatorLower,"None","Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechIntake = OptionMenu(self.frameMechanisms, self.mechanismIntake,"None","Floor", "Terminal", "Both")
+        self.dDActIntake = OptionMenu(self.frameMechanisms,self.actuatorIntake,"None","Pneumatic", "Electric linear actuator", "Motor", "Mixed")
+        self.dDMechClimber = OptionMenu(self.frameMechanisms, self.mechanismClimber,"None", "Double", "Linear actuator", "Pulley", "Scissor", "Position", "Other")
+        self.dDActClimber = OptionMenu(self.frameMechanisms,self.actuatorClimber,"None","Pneumatic", "Electric linear actuator", "Motor", "Mixed")
         self.bBack = Button(self.frameMechanisms, text ="Back", bg="#B9E5EF", command = self.back)
         self.bSave = Button(self.frameMechanisms, text ="Save", bg="#B9E5EF", command= self.saveMechanisms)
 
@@ -87,18 +114,23 @@ class Mechanisms():
         climbType = self.mechanismClimber.get()
         actClimb = self.actuatorClimber.get()
 
-        dicUpper = {"Shooter": 1, "Assited shooter": 2, "Catapult":3, "Other": 3}
-        dicLower = {"Shooter": 1, "Assited shooter": 2, "Catapult": 3, "Position": 4, "Ramp": 5,"Other": 6}
-        dicIntake = {"Floor": 1, "Terminal": 2, "Both": 3}
-        dicClimber = {"None": 1, "Double": 2, "Linear actuator": 3, "Pulley": 4, "Scissor": 5, "Position": 6, "Other": 7}
-        dicAcuators = {"Pneumatic": 1, "Electric linear actuator": 2, "Motor": 3, "Mixed": 4}
+        dicUpper = {"None": 0,"Shooter": 1, "Assited shooter": 2, "Catapult":3, "Other": 3}
+        dicLower = {"None": 0,"Shooter": 1, "Assited shooter": 2, "Catapult": 3, "Position": 4, "Ramp": 5,"Other": 6}
+        dicIntake = {"None": 0,"Floor": 1, "Terminal": 2, "Both": 3}
+        dicClimber = {"None": 0, "Double": 1, "Linear actuator": 2, "Pulley": 3, "Scissor": 4, "Position": 5, "Other": 6}
+        dicAcuators = {"None": 0,"Pneumatic": 1, "Electric linear actuator": 2, "Motor": 3, "Mixed": 4}
 
-        datos = dGeneral.team + "," + str(dicUpper[upperType]) + "," + str(dicAcuators[actUpper]) + ","
+        datos = dGeneral.team + "," + str(dicUpper[upperType]) + "," + str(dicAcuators[actUpper]) + ","+ str(dicLower[lowerType])+ ","+ str(dicAcuators[actLower]) + ","+ str(dicIntake[intakeType])+ ","+ str(dicAcuators[actIntake]) + ","+ str(dicClimber[climbType])+ ","+ str(dicAcuators[actClimb])
         return datos
 
     def saveMechanisms(self):
         datos = self.getData()
-
+        datos = datos.split(",")
+        response= self.admin.saveMechanisms(datos)
+        if response:
+            MessageBox.showinfo("Alert", "Data SAVED")
+        else:
+            MessageBox.showinfo("Alert", "ERROR Saving the data")
 
 class Programming():
     
@@ -565,7 +597,7 @@ class PitScouting():
         self.bGeneralSpecs = Button(self.framePit, text = "General Specs", bg="#B9E5EF", height=6, width=28,command=self.goToGeneral)
         self.bRobotSpecs = Button(self.framePit, text = "Robot Specs", bg="#B9E5EF", height=6, width=28, command=self.goToRobotSpecs)
         self.bProgramming = Button(self.framePit, text = "Programming", bg="#B9E5EF", height=6, width=28, command=self.goToProgramming)
-        self.bMechanisms = Button(self.framePit, text = "Mechanisms", bg="#B9E5EF", height=6, width=28)
+        self.bMechanisms = Button(self.framePit, text = "Mechanisms", bg="#B9E5EF", height=6, width=28, command=self.goToMechanisms)
         self.bMatchPre = Button(self.framePit, text = "Match Preview", bg="#B9E5EF", height=6, width=28)
         self.bNotes = Button(self.framePit, text = "Notes", bg="#B9E5EF", height=6, width=28)
 
@@ -592,5 +624,13 @@ class PitScouting():
     def goToProgramming(self):
         self.framePit.destroy()
         toShow = Programming()
+    
+    def goToMechanisms(self):
+        self.framePit.destroy()
+        toShow = Mechanisms()
+    
+    def goToPreview(self):
+        self.framePit.destroy()
+        toShow = MatchPreview()
 
 test = Mechanisms()
