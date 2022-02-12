@@ -8,12 +8,73 @@ import Data as dGeneral
 
 gteam = 0
 
+class Notes():
+    admin = GeneralADjdbc()
+    
+
+    def __init__(self):
+
+        #General settings
+        self.frameNotes= Tk()
+        self.frameNotes.title("THE BOX: Notes")
+        self.frameNotes.geometry("1123x673")
+
+        #Define background image
+
+        self.bgImage = PhotoImage(file="Images/generalBg2.png")
+        self.labelBg = Label(self.frameNotes,image=self.bgImage)
+        self.labelBg.place(x=0,y=0)
+        
+        #Define components
+        
+        self.tfNotes = Text(self.frameNotes, width=90, height=10)
+
+
+        self.bBack = Button(self.frameNotes, text ="Back", bg="#B9E5EF", command = self.back)
+
+        self.bSave = Button(self.frameNotes, text ="Save", bg="#B9E5EF", command=self.saveNotes)
+
+        #Position elements
+
+        self.tfNotes.place(relx = 0.5,rely = 0.5, anchor = CENTER)
+
+        self.bBack.place(x=500, y = 500)
+
+        self.bSave.place(x=570, y=500)
+
+        self.frameNotes.mainloop()
+
+    def back(self):
+
+        self.frameNotes.destroy()
+        toShow = PitScouting()
+    
+    def getData(self):
+        notes= self.tfNotes.get("1.0", END)
+        notes = notes.split("\n")
+
+        datos = dGeneral.team + "," + notes[0]
+        return datos
+    
+    def saveNotes(self):
+        datos= self.getData()
+        datos = datos.split(",")
+        response =self.admin.saveNotes(datos)
+        if response:
+            MessageBox.showinfo("Alert", "Data SAVED")
+        else:
+            MessageBox.showinfo("Alert", "ERROR Saving the data")
+
+
 class MatchPreview():
+
+    
 
     admin = GeneralADjdbc()
 
     def __init__(self):
         #General settings
+
         self.framePreview = Tk()
         self.framePreview.title("THE BOX: Match Preview")
         self.framePreview.geometry("1123x673")
@@ -31,8 +92,90 @@ class MatchPreview():
         self.defense.set("Defense")
 
         #Define components
-        
 
+        def click(*args):
+            self.tfCargosUpper.delete(0, 'end')
+
+        def click2(*args):
+            self.tfCargosLower.delete(0, 'end')
+        
+        def click3(*args):
+            self.tfCycles.delete(0, 'end')
+        
+        def leave(*args):
+            self.framePreview.focus()
+        
+        self.tfCargosUpper= Entry(self.framePreview, width=40)
+
+        self.tfCargosUpper.insert(0,"Number of cargos on upper hub")
+
+        self.tfCargosUpper.bind("<Button-1>", click)
+
+        self.tfCargosUpper.bind("<Leave>", leave)
+
+        self.tfCargosLower= Entry(self.framePreview, width=40)
+
+        self.tfCargosLower.insert(0,"Number of cargos on lower hub")
+
+        self.tfCargosLower.bind("<Button-1>", click2)
+
+        self.tfCargosLower.bind("<Leave>", leave)
+
+        self.tfCycles= Entry(self.framePreview, width=40)
+
+        self.tfCycles.insert(0,"Number of cycles")
+
+        self.tfCycles.bind("<Button-1>", click3)
+
+        self.tfCycles.bind("<Leave>", leave)
+
+        self.dDPriority = OptionMenu(self.framePreview, self.priority,"None","Upper Hub", "Lower Hub", "Climb", "Defense")
+
+        self.dDDefense = OptionMenu(self.framePreview, self.defense,"True","False")
+
+        self.bBack = Button(self.framePreview, text ="Back", bg="#B9E5EF", command = self.back)
+        self.bSave = Button(self.framePreview, text ="Save", bg="#B9E5EF", command= self.savePreview)
+
+        #Position elements
+        self.tfCargosUpper.place(x= 270, y=200)
+        self.tfCargosLower.place(x=270, y=270)
+        self.tfCycles.place(x=270, y=340)
+        self.dDPriority.place(x=600, y=200)
+        self.dDDefense.place(x=600, y=270)
+
+        self.bBack.place(x=480, y=450 )
+
+        self.bSave.place(x=600, y=450)
+
+
+        self.framePreview.mainloop()
+    
+    def back(self):
+
+        self.framePreview.destroy()
+        toShow = PitScouting()
+    
+    def getData(self):
+        cUpper = self.tfCargosUpper.get()
+        cLower = self.tfCargosLower.get()
+        cycles = self.tfCycles.get()
+        defense = self.defense.get()
+        priority = self.priority.get()
+
+        dicBool = {"True": 1, "False": 0}
+        datos = dGeneral.team + ","+ str(cUpper) + "," + str(cLower) + "," + str(cycles)+ "," + str(dicBool[defense])+ "," + priority
+        return datos
+
+
+    def savePreview(self):
+        datos = self.getData()
+        datos = datos.split(",")
+        response =self.admin.savePreview(datos)
+        if response:
+            MessageBox.showinfo("Alert", "Data SAVED")
+        else:
+            MessageBox.showinfo("Alert", "ERROR Saving the data")
+        
 class Mechanisms():
 
     admin = GeneralADjdbc()
@@ -598,8 +741,8 @@ class PitScouting():
         self.bRobotSpecs = Button(self.framePit, text = "Robot Specs", bg="#B9E5EF", height=6, width=28, command=self.goToRobotSpecs)
         self.bProgramming = Button(self.framePit, text = "Programming", bg="#B9E5EF", height=6, width=28, command=self.goToProgramming)
         self.bMechanisms = Button(self.framePit, text = "Mechanisms", bg="#B9E5EF", height=6, width=28, command=self.goToMechanisms)
-        self.bMatchPre = Button(self.framePit, text = "Match Preview", bg="#B9E5EF", height=6, width=28)
-        self.bNotes = Button(self.framePit, text = "Notes", bg="#B9E5EF", height=6, width=28)
+        self.bMatchPre = Button(self.framePit, text = "Match Preview", bg="#B9E5EF", height=6, width=28, command=self.goToPreview)
+        self.bNotes = Button(self.framePit, text = "Notes", bg="#B9E5EF", height=6, width=28, command=self.goToNotes)
 
         #Position elements
 
@@ -633,4 +776,8 @@ class PitScouting():
         self.framePit.destroy()
         toShow = MatchPreview()
 
-test = Mechanisms()
+    def goToNotes(self):
+        self.framePit.destroy()
+        toShow = Notes()
+
+test = Notes()
