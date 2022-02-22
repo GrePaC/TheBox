@@ -5,6 +5,7 @@ from matplotlib import get_backend
 
 from GeneralADjdbc import GeneralADjdbc
 import Data as dGeneral
+import Screens 
 
 gteam = 0
 
@@ -65,10 +66,7 @@ class Notes():
         else:
             MessageBox.showinfo("Alert", "ERROR Saving the data")
 
-
 class MatchPreview():
-
-    
 
     admin = GeneralADjdbc()
 
@@ -173,6 +171,7 @@ class MatchPreview():
         response =self.admin.savePreview(datos)
         if response:
             MessageBox.showinfo("Alert", "Data SAVED")
+            self.back()
         else:
             MessageBox.showinfo("Alert", "ERROR Saving the data")
         
@@ -272,6 +271,7 @@ class Mechanisms():
         response= self.admin.saveMechanisms(datos)
         if response:
             MessageBox.showinfo("Alert", "Data SAVED")
+            self.back()
         else:
             MessageBox.showinfo("Alert", "ERROR Saving the data")
 
@@ -463,6 +463,7 @@ class Programming():
         response = self.admin.saveProgramming(datos)
         if response:
             MessageBox.showinfo("Alert", "Data SAVED")
+            self.back()
         else:
             MessageBox.showinfo("Alert", "ERROR Saving the data")
 
@@ -601,6 +602,7 @@ class RobotSpecs():
 
         if value:
             MessageBox.showinfo("Alert", "Data SAVED")
+            self.back()
             
         else: 
             MessageBox.showinfo("Alert", "ERROR saving the data")
@@ -715,6 +717,7 @@ class GeneralSpecs():
                 MessageBox.showinfo("Alert", "ERROR saving the data")
             else: 
                 MessageBox.showinfo("Alert", "Data SAVED")
+                self.back()
                 
         else:
             MessageBox.showinfo("Alert", "Write the data")
@@ -743,6 +746,7 @@ class PitScouting():
         self.bMechanisms = Button(self.framePit, text = "Mechanisms", bg="#B9E5EF", height=6, width=28, command=self.goToMechanisms)
         self.bMatchPre = Button(self.framePit, text = "Match Preview", bg="#B9E5EF", height=6, width=28, command=self.goToPreview)
         self.bNotes = Button(self.framePit, text = "Notes", bg="#B9E5EF", height=6, width=28, command=self.goToNotes)
+        self.bBack = Button(self.framePit, text ="Close", bg="#B9E5EF",command=self.returnMenu)
 
         #Position elements
 
@@ -752,9 +756,16 @@ class PitScouting():
         self.bMechanisms.place(x=875, y=295)
         self.bMatchPre.place(x=310,y=507)
         self.bNotes.place(x=600,y=507)
+        self.bBack.place(x=40, y=40)
+
+
         
         self.framePit.mainloop()
     
+    def returnMenu(self):
+        self.framePit.destroy()
+        
+        
     
     def goToGeneral(self):
         self.framePit.destroy()
@@ -780,4 +791,3 @@ class PitScouting():
         self.framePit.destroy()
         toShow = Notes()
 
-test = Notes()

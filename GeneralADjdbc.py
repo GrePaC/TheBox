@@ -104,8 +104,9 @@ class GeneralADjdbc:
     def saveNotes(self, data):
         try:
             db_connection = mysql.connector.connect(host=dGeneral.HOST,database = dGeneral.DATABASE, user= dGeneral.USER, password = dGeneral.PASSWORD )
-            query= f"UPDATE Equipo SET notePit= '{str(data[1])}' AND pitScouting = 1 WHERE numero ="+data[0]
-            print(query)
+            query= f"UPDATE Equipo SET notePit= '{str(data[1])}', pitScouting = 1 WHERE numero ="+data[0]
+        
+            
             statement = db_connection.cursor()
             statement.execute(query)
             db_connection.commit()
